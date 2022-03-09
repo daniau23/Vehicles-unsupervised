@@ -352,6 +352,11 @@ df_copy_2.info(memory_usage='deep')
 df_copy_2.describe().T
 # df_copy_2[df_copy_2.duplicated()].head(10)
 
+# For exporting the cleaned data
+# df_cleaned = df_copy_2.to_csv("cleaned-data.csv", index=False)
+
+# End of Data cleaning 
+
 ## Performing EDA
 # The target variable is the selling price
 df_copy_2.dtypes
@@ -386,6 +391,13 @@ for index, value in enumerate(nums):
 for value in df_copy_log.select_dtypes(include=np.number):
     print(f'Skewness of {value} is: {np.around(df_copy_log[value].skew(axis=0),3)}')
 
+# print("This the cleaned-data-eda.csv columns")
+# c= df_copy_log.info(memory_usage='deep')
+# c
+# t= df_copy_log.columns.tolist()
+# print(t)
+# # For exporting the cleaned data
+# df_cleaned_eda = df_copy_log.to_csv("cleaned-data-eda.csv", index=False)
 
 
 # **Box plot**
