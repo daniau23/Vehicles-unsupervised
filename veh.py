@@ -47,7 +47,7 @@ plot_types= ["Scatter plot",
     "Line plot",
     "Histogram",
     "Box plot",
-    # "Boxen plot",
+    "Heat map",
     "Count plot",
     "Bar plot"]
 
@@ -70,6 +70,15 @@ if plot_data:
             with col_1:
                 st.plotly_chart(plot)
                 plt.tight_layout()
+
+        elif chart_type == "Heat map":
+            data = df_cleaned
+            plot = sns_plot(chart_type,data)
+            col_1,col_2 = st.columns((10,3))
+            with col_1:
+                st.pyplot(plot)
+                plt.tight_layout()
+
         else:
             # This calls the sns_plot method in make_plots
             # Which returns a figure i.e fig
@@ -83,16 +92,16 @@ if plot_data:
     show_plot(chart_type,df_cleaned_eda)
 
 
-# # Correcting Skewness
-# b_not = ['price', 'area', 'bedrooms', 'bathrooms', 'stories', 'parking']
+# Showing comparison of skewed and corrected data
+correct_data = st.sidebar.checkbox("Skewness correction types", key="correct_data")
+if correct_data:
+    st.write("""Levels of skewness\n
+    1. (-0.5,0.5) = lowly skewed\n
+    2. (-1,0-0.5) U (0.5,1) = Moderately skewed\n
+    3. (-1 & beyond ) U (1 & beyond) = Highly skewed""")
 
-# # Log approach
-# housing_log = housing.copy()
-
-# fig, ax = plt.subplots(2,3, figsize=(20,10), constrained_layout=True)
-# ax = ax.ravel()
-
-
-# for value in (b_not):
-#     log = (f'{value}_log')
-#     housing_log[log] = housing_log[value].apply(lambda x: np.log(x+1))
+    form = st.sidebar.form("log-p")
+    menu = form.selectbox('Skewness display',options=("Yes","No"))
+    if menu == 'Yes':
+        comparsion_box(menu,df_cleaned_eda)
+    form.form_submit_button()
