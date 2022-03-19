@@ -1,4 +1,5 @@
 from ast import withitem
+from turtle import color
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -302,8 +303,42 @@ def comparsion_box(chart_type_com, df):
             ax4 = sns.histplot(data=df,x=x_var_log,palette='nipy_spectral',kde=True)
             ax4.set_title(f"Skewness of {x_var_log} : {np.around(df[x_var_log].skew(),3)}")
             st.pyplot(fig4)
+
+
+
+def pca_plots(pca):
+
     
+    fig, ax = plt.subplots(figsize=(20,10))
+    X = range(1, pca.n_components_+1)
+    y = pca.explained_variance_ratio_
+    ax.set_ylabel("Variance %")
+    ax.set_xlabel("Principal Components")
+    ax.set_title("Principal Compoment Variance")
+    # ax.set_xlim(right=20)
+    ax.bar(X,y, color='blue')
+    # plt.show()
+    st.pyplot(fig)
+    # return fig
+# creating the dataset
+    # data = {'C':20, 'C++':15, 'Java':30,
+    #     'Python':35}
+    # courses = list(data.keys())
+    # values = list(data.values())
+
+    # fig = plt.figure(figsize = (10, 5))
+
+    # # creating the bar plot
+    # plt.bar(courses, values, color ='maroon',
+    #     width = 0.4)
+
+    # plt.xlabel("Courses offered")
+    # plt.ylabel("No. of students enrolled")
+    # plt.title("Students enrolled in different courses")
+    # plt.show()
     
+    #  
+
     # # """Histogram section"""
     # elif chart_type_com == "Histo-plot":
     #     select_x_var = st.sidebar.radio('''Select the value to be feature to be 
