@@ -197,82 +197,111 @@ if model_click:
 
     input_df = user_input_features()
     
-    input_df
-#     # df_cleaned_eda
-    
-#     # # Ordinal features
-#     # encode = ["brand", "model","seller_type","fuel_type","transmission_type"]
-    
+    def feature_eng(df):
+        input_df
+        #     # df_cleaned_eda
 
-#     # # for col in encode:
-#     # #     dummy = pd.get_dummies(df_cleaned_eda[col], prefix=col)
-#     # #     df_unsupervised = pd.concat([input_df,dummy], axis=1)
-        
-#     # #     # Delete the column because the dummies are used
-#     # #     del df_unsupervised[col]
-#     # # dummy
-#     # # df_unsupervised = df_unsupervised[:1] # Selects only the first row (the user input data)
-    
-#     # # print(df_unsupervised.columns.tolist())
+        #     # # Ordinal features
+        #     # encode = ["brand", "model","seller_type","fuel_type","transmission_type"]
 
-    df_supervised = pd.get_dummies(input_df)
-    # df_supervised
 
-    st.write("Normalisation in progress")
-    scaler = RobustScaler()
-    
-    my_bar = st.progress(0)
-    for percent_complete in range(100):
-        time.sleep(0.01)
-        my_bar.progress(percent_complete + 1)
-        if percent_complete == 50:
-            st.write("Almost there")
-        my_bar.progress(percent_complete + 1)
-    
-    time.sleep(0.01)
-    st.success("Fully scaled")
-    df_supervised_scaled = scaler.fit_transform(df_supervised)
-    df_supervised_scaled
-
-   
-    radio = st.radio("Want to use PCA [Principal component Analysis]?", ("Yes","No"))
-    col1,col2 = st.columns((1,1))
-    form_pca = st.form('form-pca')
-    # with col1:
-    if radio == "Yes":
-        # with form_pca:
+        #     # # for col in encode:
+        #     # #     dummy = pd.get_dummies(df_cleaned_eda[col], prefix=col)
+        #     # #     df_unsupervised = pd.concat([input_df,dummy], axis=1)
             
-        n_components_percent = st.slider("Percentage components", min_value=0,max_value=100,value=90)
-        time.sleep(0.9)
-        n_components= n_components_percent/100
-        pca = PCA(n_components=n_components).fit(df_supervised_scaled)
-        
-        
-        my_bar2 = st.progress(0)
+        #     # #     # Delete the column because the dummies are used
+        #     # #     del df_unsupervised[col]
+        #     # # dummy
+        #     # # df_unsupervised = df_unsupervised[:1] # Selects only the first row (the user input data)
+
+        #     # # print(df_unsupervised.columns.tolist())
+
+        df_supervised = pd.get_dummies(input_df)
+        # df_supervised
+
+        st.write("Normalisation in progress")
+        scaler = RobustScaler()
+
+        my_bar = st.progress(0)
         for percent_complete in range(100):
             time.sleep(0.01)
-            my_bar2.progress(percent_complete + 1)
-            if percent_complete == 60:
-                st.write("Almost done")
-            my_bar2.progress(percent_complete + 1)
-            # st.form_submit_button()
+            my_bar.progress(percent_complete + 1)
+            if percent_complete == 50:
+                st.write("Almost there")
+            my_bar.progress(percent_complete + 1)
+
+        time.sleep(0.01)
+        st.success("Fully scaled")
+        df_supervised_scaled = scaler.fit_transform(df_supervised)
+        df_supervised_scaled
 
 
-        st.success("You just applied a Feature engineering algorithm")
-        pca_data = pca.transform(df_supervised_scaled)
-
-        # plotting the pca components
-        radio = st.radio("Do you wish to visualise the PCA explained Variance ratio?",("Yes","No"))
+        radio = st.radio("Want to use PCA [Principal component Analysis]?", ("Yes","No"))
+        col1,col2 = st.columns((1,1))
+        form_pca = st.form('form-pca')
+        # with col1:
         if radio == "Yes":
-            st.write(f"Features are feed in: {pca.n_features_in_}")
-            st.write(f"PCA components are: {pca.n_components_}")
-            # pca_plotting = pca_plots(pca)
-            pca_plots(pca)
-            st.write(f"Using {pca.n_components_} components explains {n_components_percent}% of the data! That's awesome")
-            time.sleep(0.9)
-            st.balloons()
-            st.snow()
-            # st.pyplot(pca_plotting)
-            # pca_plots(pca)
-    else:
-        pass
+            # with form_pca:
+            while radio == "Yes":    
+                n_components_percent = st.slider("Percentage components", min_value=0,max_value=100,value=90)
+                time.sleep(0.9)
+                n_components= n_components_percent/100
+                pca = PCA(n_components=n_components).fit(df_supervised_scaled)
+                
+                
+                my_bar2 = st.progress(0)
+                for percent_complete in range(100):
+                    time.sleep(0.01)
+                    my_bar2.progress(percent_complete + 1)
+                    if percent_complete == 60:
+                        st.write("Almost done")
+                    my_bar2.progress(percent_complete + 1)
+                    # st.form_submit_button()
+
+
+                st.success("You just applied a Feature engineering algorithm")
+                pca_data = pca.transform(df_supervised_scaled)
+
+                # plotting the pca components
+                radio2 = st.radio("Do you wish to visualise the PCA explained Variance ratio?",("Yes","No"))
+                if radio2 == "Yes":
+                    while radio2 == "Yes":
+                        st.write(f"Features are feed in: {pca.n_features_in_}")
+                        st.write(f"PCA components are: {pca.n_components_}")
+                        # pca_plotting = pca_plots(pca)
+                        pca_plots(pca)
+                        st.write(f"Using {pca.n_components_} components explains {n_components_percent}% of the data! That's awesome")
+                        time.sleep(0.9)
+                        st.balloons()
+                        st.snow()
+
+                        return pca_data
+
+                elif radio2 == "No":
+                    st.write(f"No Visualisation was used. Please try it")
+                    return pca_data
+        else:
+            nothing = st.write(f"No PCA was applied. Please try it")
+            return nothing
+
+
+    pca_data = feature_eng(input_df)
+    
+    def clusters(df):
+
+        cluster_click = sidebar.selectbox("Clustering",("DBSCAN","K-Means","Agglomerate",))
+
+        if cluster_click == "DBSCAN":
+            st.write("DBSCAN")
+            pca_data
+
+        elif cluster_click == "K-Means":
+            st.write("K-Means")
+
+        elif cluster_click == "Agglomerate":
+            st.write("Agglomerate")
+
+
+        return df
+
+    clustering = clusters(pca_data)
