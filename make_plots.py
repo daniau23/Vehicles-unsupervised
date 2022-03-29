@@ -319,83 +319,34 @@ def pca_plots(pca):
     ax.bar(X,y, color='blue')
     # plt.show()
     st.pyplot(fig)
-    # return fig
-# creating the dataset
-    # data = {'C':20, 'C++':15, 'Java':30,
-    #     'Python':35}
-    # courses = list(data.keys())
-    # values = list(data.values())
 
-    # fig = plt.figure(figsize = (10, 5))
 
-    # # creating the bar plot
-    # plt.bar(courses, values, color ='maroon',
-    #     width = 0.4)
 
-    # plt.xlabel("Courses offered")
-    # plt.ylabel("No. of students enrolled")
-    # plt.title("Students enrolled in different courses")
-    # plt.show()
-    
-    #  
+def cluster_plots(df,components_,labels,pca1,pca2,pca3):
+    if components_ > 2:
+        fig = px.scatter_3d(df,
+                            x=df[:,int(pca1)],
+                            y=df[:,int(pca2)],
+                            z=df[:,int(pca3)],
+                            opacity=1,
+                            size_max=18,
+                            symbol=labels,
+                            color=labels) # color=km.labels_, symbol=km.labels_
+        
+        fig.update_layout(scene = dict(
+                            xaxis_title=f'PC {int(pca1+1)}',
+                            yaxis_title=f'PC {int(pca2+1)}',
+                            zaxis_title=f'PC {int(pca3+1)}'),
+                            width=700,
+                            margin=dict(r=20, b=10, l=10, t=10)
+                            )
 
-    # # """Histogram section"""
-    # elif chart_type_com == "Histo-plot":
-    #     select_x_var = st.sidebar.radio('''Select the value to be feature to be 
-    #     displayed''', options=(key_values))
+        # Hide colorbar axis
+        fig.update_layout(coloraxis_showscale=False)
+        # fig.update_traces(marker={'colorbar_xpad':0,
+        #                         'showscale':False})
 
-    #     with st.container():
-    #         with col1:
-    #             fig1,ax1 = plt.subplots()
-    #             x_var = key_values.get(select_x_var)
-                
-    #             # sns.histplot(data=df,x=x_var,kde=True)
-    #             # ax.set_title(f"Histogram plot of {selected_x_var}")
-    #             # ax.set_title(f"Skewness of {x_var}: {np.around(df[x_var].skew(axis=0),2)}")
+        st.plotly_chart(fig)
 
-    #             ax1 = sns.histplot(data=df,x=x_var,kde=True) #,palette='nipy_spectral'
-    #             ax1.set_title(f"Skewness of {x_var}: {np.around(df[x_var].skew(axis=0),2)}")
-    #             st.pyplot(fig1)
-
-    #             # sns.histplot(x=log, data=df, ax=ax[index], kde=True,bins=bins_spec[index])
-    #             # ax[index].set_title(f"Skewness in log10: {np.around(df[log].skew(axis=0),2)}",fontsize=14)
-            
-    #         with col2:
-    #             fig2,ax2 = plt.subplots()
-    #             x_var_log = (f'{x_var}_log')
-    #             ax2 = sns.histplot(data=df,x=x_var_log,palette='nipy_spectral',kde=True)
-    #             ax2.set_title(f"Skewness of {x_var_log} : {np.around(df[x_var_log].skew(),3)}")
-    #             st.pyplot(fig2)
-
-"""Not Required"""
-# Log vs normal plot
-# def comparsion_box(df):
-#     col1,col2=st.columns([10,10])
-#     with st.container():
-#         with col1:
-#             fig1,ax1 = plt.subplots()
-#             x_var = 'price'
-#             ax1 = sns.boxplot(df[x_var],palette='nipy_spectral')
-#             ax1.set_title(f"Skewness: {np.around(df[x_var].skew(),3)}")
-#             st.pyplot(fig1)
-
-#         with col2:
-#             fig2,ax2 = plt.subplots()
-#             x_var = 'price_log'
-#             ax2 = sns.boxplot(df[x_var],palette='nipy_spectral')
-#             ax2.set_title(f"Skewness: {np.around(df[x_var].skew(),3)}")
-#             st.pyplot(fig2)
-
-#         with col1:
-#             fig3,ax3 = plt.subplots()
-#             x_var = 'area'
-#             ax3 = sns.boxplot(df[x_var],palette='nipy_spectral')
-#             ax3.set_title(f"Skewness: {np.around(df[x_var].skew(),3)}")
-#             st.pyplot(fig3)
-
-#         with col2:
-#             fig4,ax4 = plt.subplots()
-#             x_var = 'area_log'
-#             ax4 = sns.boxplot(df[x_var],palette='nipy_spectral')
-#             ax4.set_title(f"Skewness: {np.around(df[x_var].skew(),3)}")
-#             st.pyplot(fig4)
+    elif components_ < 2:
+        st.write("Components should be more than 2 or more to visualise!")
