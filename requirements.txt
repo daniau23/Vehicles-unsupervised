@@ -5,3 +5,4 @@ matplotlib==3.3.4
 seaborn==0.11.2
 plotly==5.4.0
 streamlit==1.7.0
+click==8
