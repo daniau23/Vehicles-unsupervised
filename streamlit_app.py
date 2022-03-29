@@ -15,11 +15,15 @@ from sklearn.model_selection import GridSearchCV,train_test_split,KFold,Stratifi
 from sklearn.pipeline import  Pipeline
 from sklearn.neighbors import KNeighborsClassifier
 import pickle
+
+from streamlit.proto.Markdown_pb2 import Markdown
 from make_plots import *
 import time 
 warnings.filterwarnings("ignore")
 from clustering import *
 
+# definition for sidebar
+sidebar = st.sidebar
 
 df_uncleaned = pd.read_csv("cardekho_updated.csv.zip")
 
@@ -28,13 +32,115 @@ df_cleaned = pd.read_csv("cleaned-data.csv")
 df_cleaned_eda = pd.read_csv("cleaned-data-eda.csv")
 
 st.title('Unsupervised Learning App')
-st.sidebar.subheader('An App by Daniel Ihenacho')
-st.sidebar.write('''This app  makes use of a vehicle dataset 
+sidebar.subheader('An App by Daniel Ihenacho')
+sidebar.write('''This app  makes use of a vehicle dataset 
 for unsupervised learning purposes ''')
 
 
+# About me 
+about_me = sidebar.checkbox("About Me",key='ME')
+if about_me:
+    st.markdown('## Daniel Chiebuka Ihenacho', unsafe_allow_html=True)
+    st.markdown('### Summary', unsafe_allow_html=True)
+    st.info('''
+    - Aspiring Data scientist, Analyst and Teacher.
+    - TEFL (Teaching English as a Foreign Language) certified.
+    - Mandarin proficient; HSK 4 (Hanyu Shuiping Kaoshi) certified.
+    - Skilled, disciplined & a team player
+    - Motivated by problems/challenges and intrigued in finding solutions.
+    I am thrilled and look forward to hearing from you about potential vacancies and opportunities. Please do feel free to message me.
+    ''')
+    # Custom function for printing text
+    def txt(a, b):
+        col1, col2 = st.columns([4,1])
+        with col1:
+            st.markdown(a)
+        with col2:
+            st.markdown(b)
+
+    def txt2(a, b):
+        col1, col2 = st.columns([1,4])
+        with col1:
+            st.markdown(f'`{a}`')
+        with col2:
+            st.markdown(b)
+
+    def txt3(a, b):
+        col1, col2 = st.columns([1,2])
+        with col1:
+            st.markdown(a)
+        with col2:
+            st.markdown(b)
+    
+    def txt4(a, b, c):
+        col1, col2, col3 = st.columns([1.5,2,2])
+        with col1:
+            st.markdown(f'`{a}`')
+        with col2:
+            st.markdown(b)
+        with col3:
+            st.markdown(c)
+
+    st.markdown('''
+    ### Education
+    ''')
+
+    txt("**M.Eng.** (Software Engineering), *Liaoning Technical University*, China",
+    "2019-2022")
+    st.markdown('''
+    - GPA: ``
+    - Research thesis entitled `Design of Gas Cyclone Using Hybrid Particle Swarm Optimization Algorithm`.
+    ''')
+
+    txt("**B.Eng.** (Electrical & Electronics Engineering), *Landmark University*, Nigeria",
+    "2014-2019")
+    st.markdown('''
+    - GPA: `4.77`
+    - Thesis entitled `Design of Pyramidal Horn Antenna for WLAN Communication in Landmark Farm at 5.8GHz`
+    - Graduated with First Class Honors.
+    ''')
+
+    st.markdown('''
+    ### Work Experience
+    ''')
+
+    txt("**Industrial Training (IT) Student**,*Nigerian Communications Satellite Limited (Nigcomsat)*, Nigeria",
+    "01-01-2018 To 30-06-2018")
+    st.markdown('''
+    - Contributed to the successful NNPC (Nigerian National Petroleum Corporation) elections by setting up computers and ensuring a safe zone.
+    - Collaborated in a team/group work to design and implement a temperature cooling system for the department of Innovation & Development department (I&D)
+    ''')
+
+    txt("**Intern**, *Hotspot Network Limited*, Nigeria",
+    "01-07-2017 to 31-07-2017")
+    st.markdown("""
+    - Contributed in Radio Planning and Deployment of Rural telephony BTS project under the auspices of Universal Service Provision Fund (USPF).
+    - Praised for effective writing of executive summaries for the company as an intern in the company, which helped in business negotiations.
+    """)
+
+    st.markdown('''
+    ### Skills
+    ''')
+    txt3("Programming", "`Python`")
+    txt3("Data processing/wrangling", "`PostgreSQL`, `pandas`, `numpy`")
+    txt3("Data visualization", "`matplotlib`, `seaborn`, `plotly`")
+    txt3("Data analysis", "`Excel`,`Tableau`")
+    txt3("Machine Learning", "`scikit-learn`")
+    txt3("Deep Learning", '``')
+    txt3("Model deployment", "`streamlit`")
+
+    #####################
+    st.markdown('''
+    ### Social Media
+    ''')
+    txt2("LinkedIn", "http://www.linkedin.com/in/daniel-ihenacho-637467223")
+    txt2("Indeed", "https://my.indeed.com/p/danielchiebukai-hz1szfb")
+    txt2("GitHub", "https://github.com/daniau23")
+    txt2("Kaggle", "https://www.kaggle.com/danielihenacho")
+    txt2("ORCID", "https://orcid.org/0000-0003-3043-9201")
+    
 # display data
-show_data = st.sidebar.checkbox("See the raw data and data description?",key='data')
+show_data = sidebar.checkbox("See the raw data and data description?",key='data')
 with st.container():
     if show_data:
         st.write("This is the uncleaned data")
@@ -54,10 +160,11 @@ plot_types= ["Scatter plot",
     "Bar plot"]
 
 # User choose type
-plot_data = st.sidebar.checkbox("Do you want to visualise the data?", key="plot_data")
+plot_data = sidebar.checkbox("Do you want to visualise the data?", key="plot_data")
 if plot_data:
-    chart_type = st.sidebar.selectbox("Choose your chart type", plot_types)
-
+    chart_type = sidebar.selectbox("Choose your chart type", plot_types)
+   
+    
     def show_plot(chart_type,data):
         if chart_type == "Bar plot":
             plot = plotly_plot(chart_type,data)
@@ -95,22 +202,21 @@ if plot_data:
 
 
 # Showing comparison of skewed and corrected data
-correct_data = st.sidebar.checkbox("Skewness correction types", key="correct_data")
+correct_data = sidebar.checkbox("Skewness correction types", key="correct_data")
 if correct_data:
     st.write("""Levels of skewness\n
     1. (-0.5,0.5) = lowly skewed\n
     2. (-1,0-0.5) U (0.5,1) = Moderately skewed\n
     3. (-1 & beyond ) U (1 & beyond) = Highly skewed""")
 
-    form = st.sidebar.form("log-p")
+    form = sidebar.form("log-p")
     menu = form.selectbox('Skewness display',options=("Yes","No"))
     if menu == 'Yes':
         comparsion_box(menu,df_cleaned_eda)
     form.form_submit_button()
 
 
-# definition for sidebar
-sidebar = st.sidebar
+
 
 model_click = sidebar.checkbox("The Model",key='modeling')
 
@@ -129,10 +235,12 @@ df_new = df_cleaned_eda[X_mix]
 
 if model_click:
     st.subheader("Welcome to the model")
+    
+    
     def user_input_features():
         with sidebar.form('user-inputs'):
             with st.expander('User Inputs'):
-                n_samples = st.slider("How many samples do you want",min_value=1,max_value=13474,value=6392)
+                n_samples = st.slider("How many samples do you want",min_value=300,max_value=13474,value=6392)
                 n_random = st.slider("Choose your random state",min_value=1,max_value=50,value=42)
                 df_user = df_new.sample(n=n_samples,random_state=n_random)
                 # df_user =  df_new
@@ -198,6 +306,7 @@ if model_click:
 
     input_df = user_input_features()
     
+    # @st.cache(suppress_st_warning=True)
     def feature_eng(df):
         input_df
         #     # df_cleaned_eda
@@ -272,7 +381,7 @@ if model_click:
                         st.write(f"PCA components are: {pca.n_components_}")
                         # pca_plotting = pca_plots(pca)
                         pca_plots(pca)
-                        st.write(f"Using {pca.n_components_} components explains {n_components_percent}% of the data! That's awesome")
+                        st.warning(f"Using {pca.n_components_} components explains {n_components_percent}% of the data! That's awesome")
                         
                         # returns the pca dataframe and the components after selecting
                         # the number of components needed for the PCA
@@ -293,7 +402,7 @@ if model_click:
         time.sleep(0.9)
         # st.balloons()
         # st.snow()
-    
+        
         def clusters(df):
 
             cluster_click = sidebar.selectbox("Clustering",("DBSCAN","K-Means","Agglomerate",))

@@ -17,7 +17,7 @@ warnings.filterwarnings("ignore")
 key_values = {"Average Cost":'avg_cost_price', 
             "Vehicle age":'vehicle_age', 
             "Km driven":'km_driven', 
-            "Milage":'mileage', "Engine":'engine', 
+            "Mileage":'mileage', "Engine":'engine', 
             "Max power":'max_power', "Seats":'seats', 
             "Selling price":'selling_price'}
 
