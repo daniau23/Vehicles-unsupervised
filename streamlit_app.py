@@ -400,7 +400,7 @@ if model_click:
     try:
         supervised, pca_data, components_ = feature_eng(input_df)
         time.sleep(0.9)
-        print(components_)
+        # print(components_)
         # st.balloons()
         # st.snow()
         
@@ -515,8 +515,8 @@ if model_click:
         prediction =  knn.predict(X_test)
         
         
-        print(list(range(components_)))
-        print(df_knn_set.columns.tolist())
+        # print(list(range(components_)))
+        # print(df_knn_set.columns.tolist())
 
         # Model predictions pre-trained model
         # load_vehicle = pickle.load(open('vehicle.pkl', 'rb'))
