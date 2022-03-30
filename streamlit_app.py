@@ -397,23 +397,25 @@ if model_click:
 
     # supervised contains my dummies data for the
     # supervsied classification model that I will use
-    try:
-        supervised, pca_data, components_ = feature_eng(input_df)
-        time.sleep(0.9)
-        # st.balloons()
-        # st.snow()
-        
-        def clusters(df):
+    # try:
+    supervised, pca_data, components_ = feature_eng(input_df)
+    time.sleep(0.9)
+    print(components_)
+    # st.balloons()
+    # st.snow()
+    
+    def clusters(df):
 
-            cluster_click = sidebar.selectbox("Clustering",("DBSCAN","K-Means","Agglomerate",))
+        cluster_click = sidebar.selectbox("Clustering",("DBSCAN","K-Means","Agglomerate",))
 
-            if cluster_click == "DBSCAN":
-                st.write("DBSCAN")
-                
-                # Returns the dbscan labels 
-                dbscan_labels = cluster_dbscan(pca_data)
-                final_labels = dbscan_labels
-                col1,col2 = st.columns([5,10])
+        if cluster_click == "DBSCAN":
+            st.write("DBSCAN")
+            
+            # Returns the dbscan labels 
+            dbscan_labels = cluster_dbscan(pca_data)
+            final_labels = dbscan_labels
+            col1,col2 = st.columns([5,10])
+            if components_ > 3:
                 with col1:
                     with st.form("Visualise"):
                         componets_1 = st.number_input("Choose your component 1",0,components_-1,0)
@@ -423,109 +425,111 @@ if model_click:
                 with col2:
                     time.sleep(0.9)
                     cluster_plots(pca_data,components_,dbscan_labels,componets_1,componets_2,componets_3)
+            else:
+                st.error("Number of components msust be greater than 2 to visualise clusters")
 
-            elif cluster_click == "K-Means":
-                st.write("K-Means")
-                kmeans_labels = cluster_kmeans(pca_data)
-                final_labels = kmeans_labels
-                col1,col2 = st.columns([5,10])
-                with col1:
-                    with st.form("Visualise"):
-                        componets_1 = st.number_input("Choose your component 1",0,components_-1,0)
-                        componets_2 = st.number_input("Choose your component 2",0,components_-1,1)
-                        componets_3 = st.number_input("Choose your component 3",0,components_-1,2)
-                        st.form_submit_button("Visualise")    
-                with col2:
-                    time.sleep(0.9)
-                    cluster_plots(pca_data,components_,kmeans_labels,componets_1,componets_2,componets_3)
+        elif cluster_click == "K-Means":
+            st.write("K-Means")
+            kmeans_labels = cluster_kmeans(pca_data)
+            final_labels = kmeans_labels
+            col1,col2 = st.columns([5,10])
+            with col1:
+                with st.form("Visualise"):
+                    componets_1 = st.number_input("Choose your component 1",0,components_-1,0)
+                    componets_2 = st.number_input("Choose your component 2",0,components_-1,1)
+                    componets_3 = st.number_input("Choose your component 3",0,components_-1,2)
+                    st.form_submit_button("Visualise")    
+            with col2:
+                time.sleep(0.9)
+                cluster_plots(pca_data,components_,kmeans_labels,componets_1,componets_2,componets_3)
 
-            elif cluster_click == "Agglomerate":
-                st.write("Agglomerate")
-                agglomerate_labels = cluster_agglomerate(pca_data)
-                final_labels = agglomerate_labels
-                col1,col2 = st.columns([5,10])
-                with col1:
-                    with st.form("Visualise"):
-                        componets_1 = st.number_input("Choose your component 1",0,components_-1,0)
-                        componets_2 = st.number_input("Choose your component 2",0,components_-1,1)
-                        componets_3 = st.number_input("Choose your component 3",0,components_-1,2)
-                        st.form_submit_button("Visualise")    
-                with col2:
-                    time.sleep(0.9)
-                    cluster_plots(pca_data,components_,agglomerate_labels,componets_1,componets_2,componets_3)
+        elif cluster_click == "Agglomerate":
+            st.write("Agglomerate")
+            agglomerate_labels = cluster_agglomerate(pca_data)
+            final_labels = agglomerate_labels
+            col1,col2 = st.columns([5,10])
+            with col1:
+                with st.form("Visualise"):
+                    componets_1 = st.number_input("Choose your component 1",0,components_-1,0)
+                    componets_2 = st.number_input("Choose your component 2",0,components_-1,1)
+                    componets_3 = st.number_input("Choose your component 3",0,components_-1,2)
+                    st.form_submit_button("Visualise")    
+            with col2:
+                time.sleep(0.9)
+                cluster_plots(pca_data,components_,agglomerate_labels,componets_1,componets_2,componets_3)
 
-            # returning the labels of each clustering algorithm
-            return final_labels
+        # returning the labels of each clustering algorithm
+        return final_labels
 
-        # Dsiplays the PCA visualisation and returns the clusters labels
-        clustering = clusters(pca_data)
-        # print(clustering)
-        # print(isinstance(clustering, list))
-        # print(type(clustering) == type(list))
-        # print("Labels: {}".format(clustering))
+    # Dsiplays the PCA visualisation and returns the clusters labels
+    clustering = clusters(pca_data)
+    # print(clustering)
+    # print(isinstance(clustering, list))
+    # print(type(clustering) == type(list))
+    # print("Labels: {}".format(clustering))
 
-        # print(supervised.columns)
+    # print(supervised.columns)
 
-        # put this in another python script for usage
-        # Use of supervised algorithm
-        df_dummies1_pca_dbscan = pd.concat([supervised.reset_index(drop = True), pd.DataFrame(pca_data)], axis=1)
-        
-        
-        # # '''No need for this part'''
-        # # df_dummies1_pca_dbscan.columns.values[-16:] = ['component_1',
-        # #                                             'component_2',
-        # #                                             'component_3',
-        # #                                             'component_4',
-        # #                                             'component_5',
-        # #                                             'component_6',
-        # #                                             'component_7',
-        # #                                             'component_8',
-        # #                                             'component_9',
-        # #                                             'component_10',
-        # #                                             'component_11',
-        # #                                             'component_12',
-        # #                                             'component_13',
-        # #                                             'component_14',
-        # #                                             'component_15',
-        # #                                             'component_16',]
+    # put this in another python script for usage
+    # Use of supervised algorithm
+    df_dummies1_pca_dbscan = pd.concat([supervised.reset_index(drop = True), pd.DataFrame(pca_data)], axis=1)
+    
+    
+    # # '''No need for this part'''
+    # # df_dummies1_pca_dbscan.columns.values[-16:] = ['component_1',
+    # #                                             'component_2',
+    # #                                             'component_3',
+    # #                                             'component_4',
+    # #                                             'component_5',
+    # #                                             'component_6',
+    # #                                             'component_7',
+    # #                                             'component_8',
+    # #                                             'component_9',
+    # #                                             'component_10',
+    # #                                             'component_11',
+    # #                                             'component_12',
+    # #                                             'component_13',
+    # #                                             'component_14',
+    # #                                             'component_15',
+    # #                                             'component_16',]
 
 
 
-        df_dummies1_pca_dbscan['segement_pca'] = clustering
-        i = df_dummies1_pca_dbscan.loc[df_dummies1_pca_dbscan['segement_pca'] == -1,'segement_pca'].index
-        # print(i)
-        df_dummies1_pca_dbscan.drop(i, inplace=True)
+    df_dummies1_pca_dbscan['segement_pca'] = clustering
+    i = df_dummies1_pca_dbscan.loc[df_dummies1_pca_dbscan['segement_pca'] == -1,'segement_pca'].index
+    # print(i)
+    df_dummies1_pca_dbscan.drop(i, inplace=True)
 
-        # Getting the range of components needed 
-        comp = list(range(components_))
-        df_knn_set = df_dummies1_pca_dbscan[comp]
-        df_knn_set['segement_pca'] = df_dummies1_pca_dbscan['segement_pca']
+    # Getting the range of components needed 
+    comp = list(range(components_))
+    df_knn_set = df_dummies1_pca_dbscan[comp]
+    df_knn_set['segement_pca'] = df_dummies1_pca_dbscan['segement_pca']
 
-        X = df_knn_set.drop(['segement_pca'],axis=1)
-        y = df_knn_set['segement_pca']
+    X = df_knn_set.drop(['segement_pca'],axis=1)
+    y = df_knn_set['segement_pca']
 
-        X_train, X_test, y_train, y_test = train_test_split(X,y,random_state=42,test_size=.2,train_size=.8, stratify=y)
-        knn = KNeighborsClassifier(n_neighbors=5,p=1,weights='uniform')
-        knn.fit(X_train,y_train)
+    X_train, X_test, y_train, y_test = train_test_split(X,y,random_state=42,test_size=.2,train_size=.8, stratify=y)
+    knn = KNeighborsClassifier(n_neighbors=5,p=1,weights='uniform')
+    knn.fit(X_train,y_train)
 
-        prediction =  knn.predict(X_test)
-        
-        
-        print(list(range(components_)))
-        print(df_knn_set.columns.tolist())
+    prediction =  knn.predict(X_test)
+    
+    
+    print(list(range(components_)))
+    print(df_knn_set.columns.tolist())
 
-        # Model predictions pre-trained model
-        # load_vehicle = pickle.load(open('vehicle.pkl', 'rb'))
-        # prediction = load_vehicle.predict(X)
+    # Model predictions pre-trained model
+    # load_vehicle = pickle.load(open('vehicle.pkl', 'rb'))
+    # prediction = load_vehicle.predict(X)
 
-        
-        # Comparing Observed to predicted
-        st.subheader("Predicted vs Observed")
-        df_prd_tst = pd.DataFrame({'Predicted':prediction.astype('int8'), 'Observed':y_test})
-        # df_prd_tst.to_csv('prediction.csv')
-        st.write(df_prd_tst)
-    except Exception:
-        st.error("PCA was not selected and no model can be applied")
+    
+    # Comparing Observed to predicted
+    st.subheader("Predicted vs Observed")
+    df_prd_tst = pd.DataFrame({'Predicted':prediction.astype('int8'), 'Observed':y_test})
+    # df_prd_tst.to_csv('prediction.csv')
+    st.write(df_prd_tst)
+    # except Exception:
+    #     st.error("PCA was not selected and no model can be applied")
 
 
 pre_model_click = sidebar.checkbox("Pre-trained model",key='pre-modeling')

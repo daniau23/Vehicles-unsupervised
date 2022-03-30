@@ -321,30 +321,30 @@ def pca_plots(pca):
 
 
 def cluster_plots(df,components_,labels,pca1,pca2,pca3):
-    if components_ > 2:
-        fig = px.scatter_3d(df,
-                            x=df[:,int(pca1)],
-                            y=df[:,int(pca2)],
-                            z=df[:,int(pca3)],
-                            opacity=1,
-                            size_max=18,
-                            symbol=labels,
-                            color=labels) # color=km.labels_, symbol=km.labels_
-        
-        fig.update_layout(scene = dict(
-                            xaxis_title=f'PC {int(pca1+1)}',
-                            yaxis_title=f'PC {int(pca2+1)}',
-                            zaxis_title=f'PC {int(pca3+1)}'),
-                            width=700,
-                            margin=dict(r=20, b=10, l=10, t=10)
-                            )
+    # if components_ >= 3:
+    fig = px.scatter_3d(df,
+                        x=df[:,int(pca1)],
+                        y=df[:,int(pca2)],
+                        z=df[:,int(pca3)],
+                        opacity=1,
+                        size_max=18,
+                        symbol=labels,
+                        color=labels) # color=km.labels_, symbol=km.labels_
+    
+    fig.update_layout(scene = dict(
+                        xaxis_title=f'PC {int(pca1+1)}',
+                        yaxis_title=f'PC {int(pca2+1)}',
+                        zaxis_title=f'PC {int(pca3+1)}'),
+                        width=700,
+                        margin=dict(r=20, b=10, l=10, t=10)
+                        )
 
-        # Hide colorbar axis
-        fig.update_layout(coloraxis_showscale=False)
-        # fig.update_traces(marker={'colorbar_xpad':0,
-        #                         'showscale':False})
+    # Hide colorbar axis
+    fig.update_layout(coloraxis_showscale=False)
+    # fig.update_traces(marker={'colorbar_xpad':0,
+    #                         'showscale':False})
 
-        st.plotly_chart(fig)
+    st.plotly_chart(fig)
 
-    elif components_ < 2:
-        st.write("Components should be more than 2 or more to visualise!")
+    # elif components_ <= 2:
+    #     st.write("Components should be more than 2 or more to visualise!")
