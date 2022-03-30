@@ -415,7 +415,7 @@ if model_click:
             dbscan_labels = cluster_dbscan(pca_data)
             final_labels = dbscan_labels
             col1,col2 = st.columns([5,10])
-            if components_ > 3:
+            if components_ >= 3:
                 with col1:
                     with st.form("Visualise"):
                         componets_1 = st.number_input("Choose your component 1",0,components_-1,0)
